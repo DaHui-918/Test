@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper    
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lxs.bill.mapper.TypeMapper">
+
+	<select id="selectType" resultType="BillType">
+		select 
+			id_ as id, name_ as name 
+		from 
+			bill_type_ 
+	</select>
+	
+	<select id="selectTypeById" resultType="BillType" parameterType="long">
+		select 
+			id_ as id, name_ as name 
+		from 
+			bill_type_ 
+		where 
+			id_ = #{id}
+	</select>
+	
+</mapper>
+

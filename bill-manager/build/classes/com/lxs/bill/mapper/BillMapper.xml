@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper    
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lxs.bill.mapper.BillMapper">
+	<sql id="columnSql">
+  			`id_` as id,
+  			`title_` as title,
+  			`bill_time_` as billTime ,
+  			`type_id_` as typeId,
+  			`price_` as price,
+  			`file_path_` as filePath,
+  			`file_name_` as fileName,
+  			`explain_` 
+	</sql>
+	
+	<select id="selectBill" resultMap="billMap" parameterType="Bill">
+		SELECT
+			<include refid="columnSql"/>			 
+		FROM
+  			bill_ 
+		<where>
+			<if test="title != null">
+				title_ like '%${title}%'
+			</if>
+		
+			<if test="date1 != null">
+				and bill_time_ &gt;= #{date1}
+			</if>
+			<if test="date2 != null">
+				and bill_time_ &lt;= #{date2}
+			</if>
+			<if test="typeId != null">
+				and type_id_ = #{typeId}
+			</if>
+		</where> 
+	</select>
+	
+	<resultMap type="Bill" id="billMap">
+		<id column="id" property="id"/>
+		<!-- 列名和属性名相同可以省略 -->
+		<result column="typeId" property="typeId"/>
+		<!-- 列名和属性名不同不能省略 -->
+		<result column="explain_" property="explain"/>
+		
+		<association property="type" select="com.lxs.bill.mapper.TypeMapper.selectTypeById" column="typeId"></association>
+	</resultMap>
+	
+	<insert id="insertBill" parameterType="Bill">
+		INSERT INTO `bill_` (
+		  `title_`,
+		  `bill_time_`,
+		  `type_id_`,
+		  `price_`,
+		  `file_path_`,
+		  `file_name_`,
+		  `explain_`
+		) 
+		VALUES
+		  (
+		    #{title},
+		    #{billTime},
+		    #{typeId},
+		    #{price},
+		    #{filePath},
+		    #{fileName},
+		    #{explain}
+		  )
+	</insert>
+	
+	<select id="selectBillById" resultMap="billMap" parameterType="long">
+		SELECT
+			<include refid="columnSql"/>			 
+		FROM
+  			bill_ 
+  		WHERE
+  			id_ = #{id}
+	</select>
+	
+	<update id="updateBill" parameterType="Bill">
+		UPDATE 
+		  `bill_` 
+		<set>
+			<if test="title != null">
+			  `title_` = #{title},
+			</if>
+			<if test="billTime != null">
+			  `bill_time_` = #{billTime},
+			</if>		  
+			<if test="typeId != null">
+			  `type_id_` = #{typeId},
+			</if>		  
+			<if test="price != null">
+			  `price_` = #{price},
+			</if>
+			<if test="filePath != null">
+			  `file_path_` = #{filePath},
+			</if>		  
+			<if test="fileName != null">
+			  `file_name_` = #{fileName},
+			</if>		  
+			<if test="explain != null">
+			  `explain_` = #{explain}
+			</if>		  
+		</set> 
+		WHERE `id_` = #{id};
+	</update>
+	
+	<delete id="deleteBill" parameterType="long">
+		delete from bill_ where id_ = #{id}
+	</delete>
+	
+</mapper>
+
